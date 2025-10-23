@@ -1,13 +1,12 @@
 // app/(tabs)/search.tsx - Recherche et filtrage des rêves
 
-import { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, Text as RNText } from 'react-native';
-import { Text, Searchbar, Chip, SegmentedButtons } from 'react-native-paper';
+import { AsyncStorageConfig } from '@/constants/AsyncStorageConfig';
 import { DreamData } from '@/interfaces/DreamData';
 import { AsyncStorageService } from '@/services/AsyncStorageService';
-import { AsyncStorageConfig } from '@/constants/AsyncStorageConfig';
-import { TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Searchbar, SegmentedButtons, Text } from 'react-native-paper';
 
 export default function SearchScreen() {
   const router = useRouter();
