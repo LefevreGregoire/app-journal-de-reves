@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Platform,
+  Alert,
 } from 'react-native';
 import { TextInput, Button, Checkbox } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -28,8 +29,13 @@ export default function DreamForm() {
 
 
   const handleDreamSubmission = async (): Promise<void> => {
-    try {
+    // Validation simple
+    if (!dreamText.trim()) {
+      Alert.alert('Erreur', 'Veuillez décrire votre rêve');
+      return;
+    }
 
+    try {
       const formDataArray: DreamData[] = await AsyncStorageService.getData(AsyncStorageConfig.keys.dreamsArrayKey);
 
       // Ajouter le nouveau rêve
@@ -42,8 +48,12 @@ export default function DreamForm() {
         await AsyncStorage.getItem(AsyncStorageConfig.keys.dreamsArrayKey)
       );
 
+      // Message de confirmation
+      Alert.alert('Succès', 'Votre rêve a été enregistré !');
+
     } catch (error) {
       console.error('Erreur lors de la sauvegarde des données:', error);
+      Alert.alert('Erreur', 'Impossible d\'enregistrer le rêve');
     }
 
     setDreamText('');
