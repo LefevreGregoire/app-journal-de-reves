@@ -1,6 +1,6 @@
-import { StyleSheet } from 'react-native';
+import DreamForm from '@/components/DreamForm';
 import { Text, View } from '@/components/Themed';
-import DreamForm from '@/components/DreamForm'
+import { StyleSheet } from 'react-native';
 
 
 export default function TabOneScreen() {

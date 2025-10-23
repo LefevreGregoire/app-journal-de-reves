@@ -53,40 +53,115 @@ export default function DreamList() {
     };
 
     return (
-        <View>
+        <View style={styles.container}>
             <Text style={styles.title}>Liste des Rêves :</Text>
             {dreams.length > 0 ? (
                 dreams.map((dream, index) => (
-                    <Text key={index} style={styles.dreamText}>
-                        {dream.dreamText} - {dream.isLucidDream ? 'Lucide' : 'Non Lucide'}{' '}
-                    </Text>
+                    <View key={dream.id || index} style={styles.dreamCard}>
+                        <Text style={styles.dreamTitle}>
+                            {dream.title || 'Sans titre'}
+                        </Text>
+                        <Text style={styles.dreamDate}>
+                            📅 {dream.date} {dream.time ? `à ${dream.time}` : ''}
+                        </Text>
+                        <Text style={styles.dreamText} numberOfLines={2}>
+                            {dream.dreamText}
+                        </Text>
+                        <View style={styles.dreamMeta}>
+                            <Text style={styles.dreamType}>
+                                {dream.dreamType === 'lucide' && '✨ Lucide'}
+                                {dream.dreamType === 'cauchemar' && '😱 Cauchemar'}
+                                {dream.dreamType === 'ordinaire' && '💭 Ordinaire'}
+                                {dream.dreamType === 'recurring' && '🔄 Récurrent'}
+                            </Text>
+                            {dream.mood && (
+                                <Text style={styles.dreamMood}>
+                                    {dream.mood === 'positive' && '😊'}
+                                    {dream.mood === 'negative' && '😢'}
+                                    {dream.mood === 'neutre' && '😐'}
+                                </Text>
+                            )}
+                        </View>
+                        {dream.tags && dream.tags.length > 0 && (
+                            <Text style={styles.dreamTags}>
+                                🏷️ {dream.tags.join(', ')}
+                            </Text>
+                        )}
+                    </View>
                 ))
             ) : (
-                <Text style={styles.dreamText}>Aucun rêve enregistré</Text>
+                <Text style={styles.emptyText}>Aucun rêve enregistré</Text>
             )}
 
             <Button
                 mode="contained"
                 onPress={handleResetDreams}
                 style={styles.button}
+                buttonColor="#d32f2f"
             >
-                Reset Dreams
+                🗑️ Reset Dreams
             </Button>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 16,
+    },
     title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 16,
+    },
+    dreamCard: {
+        backgroundColor: '#f5f5f5',
+        padding: 12,
+        borderRadius: 8,
+        marginBottom: 12,
+        borderLeftWidth: 4,
+        borderLeftColor: '#6200ee',
+    },
+    dreamTitle: {
         fontSize: 18,
         fontWeight: 'bold',
+        marginBottom: 4,
+    },
+    dreamDate: {
+        fontSize: 12,
+        color: '#666',
         marginBottom: 8,
     },
     dreamText: {
-        fontSize: 16,
+        fontSize: 14,
+        marginBottom: 8,
+        color: '#333',
+    },
+    dreamMeta: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         marginBottom: 4,
     },
+    dreamType: {
+        fontSize: 12,
+        fontWeight: '600',
+    },
+    dreamMood: {
+        fontSize: 16,
+    },
+    dreamTags: {
+        fontSize: 12,
+        color: '#888',
+        fontStyle: 'italic',
+    },
+    emptyText: {
+        fontSize: 16,
+        color: '#999',
+        textAlign: 'center',
+        marginTop: 40,
+    },
     button: {
-        marginTop: 8,
+        marginTop: 20,
     },
 });

@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
-import { Text, View } from '@/components/Themed';
 import DreamList from '@/components/DreamList';
+import { Text, View } from '@/components/Themed';
 
 export default function TabTwoScreen() {
   return (
