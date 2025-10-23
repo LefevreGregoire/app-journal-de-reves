@@ -1,17 +1,18 @@
 // components/DreamList.tsx
 
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from 'expo-router';
-import { Button } from 'react-native-paper';
+import { AsyncStorageConfig } from '@/constants/AsyncStorageConfig';
 import { DreamData } from '@/interfaces/DreamData';
 import { AsyncStorageService } from '@/services/AsyncStorageService';
-import { AsyncStorageConfig } from '@/constants/AsyncStorageConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Button } from 'react-native-paper';
 
 
 export default function DreamList() {
     const [dreams, setDreams] = useState<DreamData[]>([]);
+    const router = useRouter();
 
     const fetchData = async () => {
         try {
@@ -57,7 +58,11 @@ export default function DreamList() {
             <Text style={styles.title}>Liste des Rêves :</Text>
             {dreams.length > 0 ? (
                 dreams.map((dream, index) => (
-                    <View key={dream.id || index} style={styles.dreamCard}>
+                    <TouchableOpacity 
+                        key={dream.id || index} 
+                        style={styles.dreamCard}
+                        onPress={() => router.push(`/dream/${dream.id}`)}
+                    >
                         <Text style={styles.dreamTitle}>
                             {dream.title || 'Sans titre'}
                         </Text>
@@ -87,7 +92,7 @@ export default function DreamList() {
                                 🏷️ {dream.tags.join(', ')}
                             </Text>
                         )}
-                    </View>
+                    </TouchableOpacity>
                 ))
             ) : (
                 <Text style={styles.emptyText}>Aucun rêve enregistré</Text>

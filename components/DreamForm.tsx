@@ -3,21 +3,18 @@
 import { AsyncStorageConfig } from '@/constants/AsyncStorageConfig';
 import { DreamData } from '@/interfaces/DreamData';
 import { AsyncStorageService } from '@/services/AsyncStorageService';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react';
 import {
   Alert,
   Dimensions,
-  Keyboard,
   KeyboardAvoidingView,
   Platform,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
   ScrollView,
+  StyleSheet,
   Text,
+  View
 } from 'react-native';
-import { Button, Checkbox, TextInput, SegmentedButtons } from 'react-native-paper';
+import { Button, SegmentedButtons, TextInput } from 'react-native-paper';
 
 
 const { width } = Dimensions.get('window');
