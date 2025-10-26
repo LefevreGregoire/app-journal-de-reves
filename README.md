@@ -4,8 +4,6 @@
 
 Bienvenue dans le starter kit du projet Journal de Rêves, une base solide pour développer une application mobile immersive dédiée à l'enregistrement, l'analyse et l'exploration des rêves.
 
-Ce projet a été pensé pour offrir une structure claire, modulaire et évolutive, facilitant le développement et l'expérimentation autour du monde onirique.
-
 ## Technologies utilisées
 
 - **Expo** - Framework de développement et déploiement multiplateforme
@@ -16,7 +14,7 @@ Ce projet a été pensé pour offrir une structure claire, modulaire et évoluti
 
 ## Structure et architecture
 
-Le projet suit une architecture simple mais extensible. Une évolution importante a été réalisée par rapport au projet du cours : la mise en place de services et de constantes dédiés à la gestion du stockage local via AsyncStorage.
+Le projet suit une architecture simple mais extensible. 
 
 ### Structure générale
 
@@ -78,8 +76,7 @@ Pour une documentation technique détaillée incluant l'architecture, les foncti
 
 ## Auteur et licence
 
-Projet académique - Starter Kit "Journal de Rêves"  
-Développé par Julien COURAUD pour servir de base à un projet étudiant.
+Projet académique - Développé par Julien COURAUD pour servir de base à un projet étudiant.
 
 ---
 
