@@ -1,76 +1,86 @@
-# 🌙 Journal de Rêves — Starter Kit (Expo + React Native + TypeScript)
+# Journal de Rêves - Starter Kit
 
-Bienvenue dans le **starter kit du projet _Journal de Rêves_**, une base solide pour initier un projet étudiant autour d’une application mobile immersive dédiée à l’enregistrement, l’analyse et le partage des rêves.  
-Ce projet a été pensé pour offrir une **structure claire, modulaire et évolutive**, afin de faciliter le développement et l’expérimentation autour du thème du monde onirique.
+## Présentation
 
----
+Bienvenue dans le starter kit du projet Journal de Rêves, une base solide pour développer une application mobile immersive dédiée à l'enregistrement, l'analyse et l'exploration des rêves.
 
-## ⚙️ Technologies utilisées
+Ce projet a été pensé pour offrir une structure claire, modulaire et évolutive, facilitant le développement et l'expérimentation autour du monde onirique.
 
-- **[Expo](https://expo.dev/)** — pour le développement et le déploiement multiplateforme  
-- **React Native** — pour la création de l’interface mobile  
-- **TypeScript** — pour une base de code robuste et typée
-- **React Native Paper** — pour une librairie graphique simple d'utilisation
-- **AsyncStorage** — pour la gestion de la persistance locale des données  
+## Technologies utilisées
 
----
+- **Expo** - Framework de développement et déploiement multiplateforme
+- **React Native** - Création d'interfaces mobiles natives
+- **TypeScript** - Base de code robuste avec typage statique
+- **React Native Paper** - Librairie de composants Material Design
+- **AsyncStorage** - Gestion de la persistance locale des données
 
-## 🧩 Structure et architecture
+## Structure et architecture
 
-Le projet suit une architecture simple mais extensible.  
-Une évolution importante a été réalisée par rapport au projet du cours: **la mise en place de services et de constantes dédiés à la gestion du stockage local via AsyncStorage**.  
+Le projet suit une architecture simple mais extensible. Une évolution importante a été réalisée par rapport au projet du cours : la mise en place de services et de constantes dédiés à la gestion du stockage local via AsyncStorage.
 
-### Structure générale :
+### Structure générale
+
 ```
 dreams-report-app/
 ├── components/
-│ ├── DreamForm.tsx // Exemple de formulaire d’ajout de rêve (TypeScript)
-│ ├── DreamList.tsx // Exemple de liste d’affichage des rêves (TypeScript)
-│
+│   ├── DreamForm.tsx          # Formulaire d'ajout de rêve
+│   ├── DreamList.tsx          # Liste d'affichage des rêves
+│   
 ├── services/
-│ ├── AsyncStorageService.ts // Gestion centralisée du stockage AsyncStorage
-│
+│   ├── AsyncStorageService.ts # Gestion centralisée du stockage
+│   
 ├── constants/
-│ ├── AsyncStorageConfig.ts // Clés de stockage et constantes globales
-│
+│   ├── AsyncStorageConfig.ts  # Clés de stockage et constantes
+│   
 ├── interfaces/
-│ ├── DreamData.ts // Définition du type Dream
-│
-├── app/ // Point d’entrée de l’application
+│   ├── DreamData.ts           # Définition du type Dream
+│   
+├── app/                        # Point d'entrée de l'application
 ```
 
----
+## Installation et lancement
 
-## 🚀 Lancer le projet
+### Étape 1 : Installation des dépendances
 
-### 1️⃣ Installation des dépendances
 ```bash
 npm install
 ```
 
-### 2️⃣ Démarrage du serveur de développement
+### Étape 2 : Démarrage du serveur de développement
+
 ```bash
 npx expo start
 ```
 
-### 3️⃣ Exécution sur un appareil ou un émulateur
-Vous pouvez lancer l’application de plusieurs manières :
+### Étape 3 : Exécution sur un appareil ou un émulateur
 
-📱 Sur un appareil physique :
-Scannez le QR Code affiché dans le terminal ou le navigateur à l’aide de l’application Expo Go (disponible sur iOS et Android).
+Vous pouvez lancer l'application de plusieurs manières :
 
-💻 Sur un émulateur :
-"Run Web", “Run on iOS simulator” ou “Run on Android device/emulator” dans Expo Developer Tools, selon votre environnement.
+**Sur un appareil physique :**
+Scannez le QR Code affiché dans le terminal ou le navigateur à l'aide de l'application Expo Go (disponible sur iOS et Android).
 
-4️⃣ Nettoyer le cache (optionnel)
+**Sur un émulateur :**
+Sélectionnez "Run on iOS simulator" ou "Run on Android device/emulator" dans Expo Developer Tools, selon votre environnement.
+
+### Étape 4 : Nettoyer le cache (optionnel)
 
 Si vous rencontrez des comportements inattendus :
+
 ```bash
 npx expo start -c
 ```
-Cette commande reconstruit le cache de bundling d’Expo.
 
-🧑‍💻 Auteur & Licence
+Cette commande reconstruit le cache de bundling d'Expo.
 
-Projet académique — Starter Kit “Journal de Rêves” - Julien COURAUD
-Développé avec ❤️ pour servir de base à un projet étudiant.
+## Documentation complète
+
+Pour une documentation technique détaillée incluant l'architecture, les fonctionnalités implémentées, et les guides de développement, consultez le fichier [DOCUMENTATION.md](DOCUMENTATION.md).
+
+## Auteur et licence
+
+Projet académique - Starter Kit "Journal de Rêves"  
+Développé par Julien COURAUD pour servir de base à un projet étudiant.
+
+---
+
+Adapté et enrichi par Grégoire Lefèvre - EPSI 2025
