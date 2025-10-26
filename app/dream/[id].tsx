@@ -30,44 +30,53 @@ export default function DreamDetailScreen() {
     } catch (error) { console.error("Erreur:", error); }
   };
 
-  // Appel à l'API moon-phase
+  // Calcul approximatif de la phase lunaire (cycle de ~29.53 jours)
+  // Note: L'API RapidAPI nécessite une clé payante, donc on utilise un calcul simplifié
   const fetchMoonPhase = async (date: string) => {
     setLoadingMoon(true);
     try {
-      const response = await fetch(`https://moon-phase.p.rapidapi.com/advanced?date=${date}`, {
-        method: 'GET',
-        headers: {
-          'X-RapidAPI-Key': 'DEMO', // En mode DEMO pour pas avoir à créer un compte
-          'X-RapidAPI-Host': 'moon-phase.p.rapidapi.com'
-        }
-      });
+      // Référence: nouvelle lune le 1er janvier 2000
+      const knownNewMoon = new Date('2000-01-06').getTime();
+      const currentDate = new Date(date).getTime();
+      const daysSinceKnownNewMoon = (currentDate - knownNewMoon) / (1000 * 60 * 60 * 24);
+      const lunarCycle = 29.53059; // Jours dans un cycle lunaire
+      const currentPhase = (daysSinceKnownNewMoon % lunarCycle) / lunarCycle;
       
-      if (response.ok) {
-        const data = await response.json();
-        const phase = data.phase || 'Inconnue';
-        setMoonPhase(getMoonPhaseEmoji(phase) + ' ' + phase);
+      let phaseName = '';
+      let emoji = '';
+      
+      if (currentPhase < 0.0625 || currentPhase >= 0.9375) {
+        phaseName = 'Nouvelle Lune';
+        emoji = '🌑';
+      } else if (currentPhase < 0.1875) {
+        phaseName = 'Premier Croissant';
+        emoji = '🌒';
+      } else if (currentPhase < 0.3125) {
+        phaseName = 'Premier Quartier';
+        emoji = '🌓';
+      } else if (currentPhase < 0.4375) {
+        phaseName = 'Gibbeuse Croissante';
+        emoji = '🌔';
+      } else if (currentPhase < 0.5625) {
+        phaseName = 'Pleine Lune';
+        emoji = '🌕';
+      } else if (currentPhase < 0.6875) {
+        phaseName = 'Gibbeuse Décroissante';
+        emoji = '🌖';
+      } else if (currentPhase < 0.8125) {
+        phaseName = 'Dernier Quartier';
+        emoji = '🌗';
       } else {
-        setMoonPhase('🌙 Phase lunaire non disponible');
+        phaseName = 'Dernier Croissant';
+        emoji = '🌘';
       }
+      
+      setMoonPhase(`${emoji} ${phaseName}`);
     } catch (error) {
       setMoonPhase('🌙 Phase lunaire non disponible');
     } finally {
       setLoadingMoon(false);
     }
-  };
-
-  // Convertit le nom de phase en emoji
-  const getMoonPhaseEmoji = (phase: string): string => {
-    const p = phase.toLowerCase();
-    if (p.includes('new')) return '🌑';
-    if (p.includes('waxing crescent')) return '🌒';
-    if (p.includes('first quarter')) return '🌓';
-    if (p.includes('waxing gibbous')) return '🌔';
-    if (p.includes('full')) return '🌕';
-    if (p.includes('waning gibbous')) return '🌖';
-    if (p.includes('last quarter')) return '🌗';
-    if (p.includes('waning crescent')) return '🌘';
-    return '🌙';
   };
 
   // Suppression avec confirmation
