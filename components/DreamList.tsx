@@ -1,4 +1,5 @@
 // components/DreamList.tsx
+// Affiche la liste des rêves enregistrés
 
 import { AsyncStorageConfig } from '@/constants/AsyncStorageConfig';
 import { DreamData } from '@/interfaces/DreamData';
@@ -14,6 +15,7 @@ export default function DreamList() {
     const [dreams, setDreams] = useState<DreamData[]>([]);
     const router = useRouter();
 
+    // Récupère les rêves depuis AsyncStorage
     const fetchData = async () => {
         try {
             const formDataArray: DreamData[] = await AsyncStorageService.getData(AsyncStorageConfig.keys.dreamsArrayKey);
@@ -23,23 +25,22 @@ export default function DreamList() {
         }
     };
 
-    // Chargement initial
+    // Chargement au montage du composant
     useEffect(() => {
         fetchData();
     }, []);
 
-    // Rechargement quand on revient sur l’écran
+    // Hook Expo Router : refresh à chaque fois qu'on revient sur cet écran
     useFocusEffect(
         useCallback(() => {
             fetchData();
-            return () => {
-                console.log('This route is now unfocused.');
-            };
         }, [])
     );
 
+    // Bouton reset pour les rêves
     const handleResetDreams = async (): Promise<void> => {
         try {
+            // Clear les deux keys 
             await AsyncStorage.setItem('dreamFormDataArray', JSON.stringify([]));
 
             const emptyDreamsData: DreamData[] = [];
@@ -57,21 +58,24 @@ export default function DreamList() {
         <View style={styles.container}>
             <Text style={styles.title}>Liste des Rêves :</Text>
             {dreams.length > 0 ? (
+                // Map pour afficher chaque rêve dans une Card cliquable
                 dreams.map((dream, index) => (
                     <TouchableOpacity 
                         key={dream.id || index} 
                         style={styles.dreamCard}
-                        onPress={() => router.push(`/dream/${dream.id}`)}
+                        onPress={() => router.push(`/dream/${dream.id}`)} // Navigation vers détails
                     >
                         <Text style={styles.dreamTitle}>
                             {dream.title || 'Sans titre'}
                         </Text>
                         <Text style={styles.dreamDate}>
-                            📅 {dream.date} {dream.time ? `à ${dream.time}` : ''}
+                            📅 {dream.date}
+                            {dream.sleepDuration && ` • ${dream.sleepDuration}h de sommeil`}
                         </Text>
                         <Text style={styles.dreamText} numberOfLines={2}>
                             {dream.dreamText}
                         </Text>
+                        {/* Affiche type + mood avec emojis */}
                         <View style={styles.dreamMeta}>
                             <Text style={styles.dreamType}>
                                 {dream.dreamType === 'lucide' && '✨ Lucide'}
@@ -87,6 +91,7 @@ export default function DreamList() {
                                 </Text>
                             )}
                         </View>
+                        {/* Affiche les tags si présents */}
                         {dream.tags && dream.tags.length > 0 && (
                             <Text style={styles.dreamTags}>
                                 🏷️ {dream.tags.join(', ')}

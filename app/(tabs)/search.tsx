@@ -1,4 +1,5 @@
-// app/(tabs)/search.tsx - Recherche et filtrage des rêves
+// app/(tabs)/search.tsx
+// Page de recherche et filtrage
 
 import { AsyncStorageConfig } from '@/constants/AsyncStorageConfig';
 import { DreamData } from '@/interfaces/DreamData';
@@ -15,10 +16,12 @@ export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState<string>('all');
 
+  // Charge tous les rêves au démarrage
   useEffect(() => {
     loadDreams();
   }, []);
 
+  // Relance le filtrage à chaque changement
   useEffect(() => {
     filterDreams();
   }, [searchQuery, filterType, allDreams]);
@@ -34,15 +37,16 @@ export default function SearchScreen() {
     }
   };
 
+  // Fonction de filtrage combiné
   const filterDreams = () => {
     let results = [...allDreams];
 
-    // Filtre par type
+    // Filtre 1 : par type de rêve
     if (filterType !== 'all') {
       results = results.filter(d => d.dreamType === filterType);
     }
 
-    // Filtre par recherche
+    // Filtre 2 : recherche textuelle dans plusieurs champs
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       results = results.filter(dream => {
@@ -76,9 +80,10 @@ export default function SearchScreen() {
         onValueChange={setFilterType}
         buttons={[
           { value: 'all', label: 'Tous' },
+          { value: 'ordinaire', label: 'Normal' },
           { value: 'lucide', label: 'Lucide' },
           { value: 'cauchemar', label: 'Cauchemar' },
-          { value: 'ordinaire', label: 'Normal' },
+          { value: 'recurring', label: 'Récurrent' },
         ]}
         style={styles.segmented}
       />
@@ -93,7 +98,7 @@ export default function SearchScreen() {
             <TouchableOpacity
               key={dream.id}
               style={styles.dreamCard}
-              onPress={() => router.push(`/dream/${dream.id}` as any)}
+              onPress={() => router.push(`/dream/${dream.id}`)}
             >
               <Text style={styles.dreamTitle}>{dream.title}</Text>
               <Text style={styles.dreamDate}>📅 {dream.date}</Text>

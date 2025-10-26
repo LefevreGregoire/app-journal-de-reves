@@ -1,4 +1,5 @@
 // components/DreamForm.tsx
+// Formulaire d'ajout de rêve
 
 import { AsyncStorageConfig } from '@/constants/AsyncStorageConfig';
 import { DreamData } from '@/interfaces/DreamData';
@@ -20,67 +21,76 @@ import { Button, SegmentedButtons, TextInput } from 'react-native-paper';
 const { width } = Dimensions.get('window');
 
 export default function DreamForm() {
-  // Champs de base
+  // Champs de base du formulaire
   const [title, setTitle] = useState<string>('');
   const [dreamText, setDreamText] = useState<string>('');
-  const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
-  const [time, setTime] = useState<string>('');
+  const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]); // Date par défaut = aujourd'hui
+  const [sleepDuration, setSleepDuration] = useState<string>(''); // Durée de sommeil en heures
   
-  // Type et caractéristiques
+  // Type et caractéristiques du rêve
   const [dreamType, setDreamType] = useState<'cauchemar' | 'lucide' | 'ordinaire' | 'recurring' | 'autre'>('ordinaire');
   const [isLucidDream, setIsLucidDream] = useState<boolean>(false);
   
-  // Émotions
+  // États émotionnels
   const [emotionBefore, setEmotionBefore] = useState<string>('');
   const [emotionAfter, setEmotionAfter] = useState<string>('');
   const [mood, setMood] = useState<'positive' | 'negative' | 'neutre'>('neutre');
+  const [emotionalIntensity, setEmotionalIntensity] = useState<number>(5); // Sur 10
   
-  // Détails
+  // Détails du rêve
   const [characters, setCharacters] = useState<string>('');
   const [location, setLocation] = useState<string>('');
   const [personalMeaning, setPersonalMeaning] = useState<string>('');
   const [tags, setTags] = useState<string>('');
+  const [clarity, setClarity] = useState<number>(5); // Clarté sur 10
+  const [sleepQuality, setSleepQuality] = useState<number>(5); // Qualité sommeil sur 10
 
+  // Fonction qui sauvegarde le rêve dans AsyncStorage
   const handleDreamSubmission = async (): Promise<void> => {
-    // Validation simple
+    // Check basique
     if (!dreamText.trim()) {
       Alert.alert('Erreur', 'Veuillez décrire votre rêve');
       return;
     }
 
     try {
+      // Récupère le tableau existant dans AsyncStorage
       const formDataArray: DreamData[] = await AsyncStorageService.getData(AsyncStorageConfig.keys.dreamsArrayKey);
 
-      // Créer le nouveau rêve avec un ID unique
+      // Création de l'objet rêve avec tous les champs
+      // ID unique = timestamp actuel
       const newDream: DreamData = {
         id: Date.now().toString(),
         title: title.trim() || 'Sans titre',
         dreamText: dreamText.trim(),
         date: date,
-        time: time || undefined,
+        sleepDuration: sleepDuration ? parseFloat(sleepDuration) : undefined,
         dreamType: dreamType,
         isLucidDream: isLucidDream || dreamType === 'lucide',
         emotionBefore: emotionBefore.trim() || undefined,
         emotionAfter: emotionAfter.trim() || undefined,
+        emotionalIntensity: emotionalIntensity,
         mood: mood,
+        // Split par virgules pour transformer en array
         characters: characters.trim() ? characters.split(',').map(c => c.trim()) : undefined,
         location: location.trim() || undefined,
+        clarity: clarity,
+        sleepQuality: sleepQuality,
         personalMeaning: personalMeaning.trim() || undefined,
         tags: tags.trim() ? tags.split(',').map(t => t.trim()) : undefined,
         createdAt: new Date().toISOString(),
       };
 
-      // Ajouter le nouveau rêve
+      // Push dans le tableau
       formDataArray.push(newDream);
 
+      // Sauvegarde dans AsyncStorage
       await AsyncStorageService.setData(AsyncStorageConfig.keys.dreamsArrayKey, formDataArray);
 
-      console.log('Rêve enregistré:', newDream);
-
-      // Message de confirmation
+      // Popup de confirmation
       Alert.alert('Succès', 'Votre rêve a été enregistré !');
 
-      // Réinitialiser le formulaire
+      // Reset tous les champs
       resetForm();
 
     } catch (error) {
@@ -89,20 +99,24 @@ export default function DreamForm() {
     }
   };
 
+  // Réinitialise tous les champs du formulaire
   const resetForm = () => {
     setTitle('');
     setDreamText('');
     setDate(new Date().toISOString().split('T')[0]);
-    setTime('');
+    setSleepDuration('');
     setDreamType('ordinaire');
     setIsLucidDream(false);
     setEmotionBefore('');
     setEmotionAfter('');
     setMood('neutre');
+    setEmotionalIntensity(5);
     setCharacters('');
     setLocation('');
     setPersonalMeaning('');
     setTags('');
+    setClarity(5);
+    setSleepQuality(5);
   };
 
   return (
@@ -135,7 +149,7 @@ export default function DreamForm() {
             placeholder="Décrivez votre rêve en détail..."
           />
 
-          {/* Date et heure */}
+          {/* Date et durée de sommeil */}
           <View style={styles.row}>
             <TextInput
               label="Date"
@@ -146,33 +160,54 @@ export default function DreamForm() {
               placeholder="YYYY-MM-DD"
             />
             <TextInput
-              label="Heure (optionnel)"
-              value={time}
-              onChangeText={setTime}
+              label="Durée sommeil (h)"
+              value={sleepDuration}
+              onChangeText={setSleepDuration}
               mode="outlined"
+              keyboardType="decimal-pad"
               style={[styles.input, { flex: 1 }]}
-              placeholder="HH:MM"
+              placeholder="Ex: 7.5"
             />
           </View>
 
           {/* Type de rêve */}
           <Text style={styles.label}>Type de rêve</Text>
-          <SegmentedButtons
-            value={dreamType}
-            onValueChange={(value) => setDreamType(value as any)}
-            buttons={[
-              { value: 'ordinaire', label: 'Ordinaire' },
-              { value: 'lucide', label: 'Lucide' },
-              { value: 'cauchemar', label: 'Cauchemar' },
-            ]}
-            style={styles.segmented}
-          />
+          <View style={styles.buttonGrid}>
+            <Button
+              mode={dreamType === 'ordinaire' ? 'contained' : 'outlined'}
+              onPress={() => setDreamType('ordinaire')}
+              style={styles.gridButton}
+            >
+              💭 Normal
+            </Button>
+            <Button
+              mode={dreamType === 'lucide' ? 'contained' : 'outlined'}
+              onPress={() => setDreamType('lucide')}
+              style={styles.gridButton}
+            >
+              ✨ Lucide
+            </Button>
+            <Button
+              mode={dreamType === 'cauchemar' ? 'contained' : 'outlined'}
+              onPress={() => setDreamType('cauchemar')}
+              style={styles.gridButton}
+            >
+              😱 Cauchemar
+            </Button>
+            <Button
+              mode={dreamType === 'recurring' ? 'contained' : 'outlined'}
+              onPress={() => setDreamType('recurring')}
+              style={styles.gridButton}
+            >
+              🔄 Récurrent
+            </Button>
+          </View>
 
           {/* Tonalité */}
           <Text style={styles.label}>Tonalité globale</Text>
           <SegmentedButtons
             value={mood}
-            onValueChange={(value) => setMood(value as any)}
+            onValueChange={setMood}
             buttons={[
               { value: 'positive', label: '😊 Positive' },
               { value: 'neutre', label: '😐 Neutre' },
@@ -199,6 +234,57 @@ export default function DreamForm() {
             style={styles.input}
             placeholder="Ex: Heureux, Troublé, Serein..."
           />
+
+          {/* Intensité émotionnelle */}
+          <Text style={styles.label}>Intensité émotionnelle: {emotionalIntensity}/10</Text>
+          <Text style={styles.sliderDescription}>De 1 (faible) à 10 (très intense)</Text>
+          <View style={styles.buttonGrid}>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+              <Button
+                key={num}
+                mode={emotionalIntensity === num ? 'contained' : 'outlined'}
+                onPress={() => setEmotionalIntensity(num)}
+                style={styles.numberButton}
+                compact
+              >
+                {num}
+              </Button>
+            ))}
+          </View>
+
+          {/* Clarté du rêve */}
+          <Text style={styles.label}>Clarté du rêve: {clarity}/10</Text>
+          <Text style={styles.sliderDescription}>De 1 (flou) à 10 (très clair)</Text>
+          <View style={styles.buttonGrid}>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+              <Button
+                key={num}
+                mode={clarity === num ? 'contained' : 'outlined'}
+                onPress={() => setClarity(num)}
+                style={styles.numberButton}
+                compact
+              >
+                {num}
+              </Button>
+            ))}
+          </View>
+
+          {/* Qualité du sommeil */}
+          <Text style={styles.label}>Qualité du sommeil: {sleepQuality}/10</Text>
+          <Text style={styles.sliderDescription}>De 1 (mauvaise) à 10 (excellente)</Text>
+          <View style={styles.buttonGrid}>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+              <Button
+                key={num}
+                mode={sleepQuality === num ? 'contained' : 'outlined'}
+                onPress={() => setSleepQuality(num)}
+                style={styles.numberButton}
+                compact
+              >
+                {num}
+              </Button>
+            ))}
+          </View>
 
           {/* Détails du rêve */}
           <TextInput
@@ -276,6 +362,36 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 8,
     marginTop: 8,
+  },
+  sliderDescription: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 8,
+    fontStyle: 'italic',
+  },
+  buttonGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 16,
+  },
+  gridButton: {
+    flex: 1,
+    minWidth: '45%',
+    marginBottom: 8,
+  },
+  numberButton: {
+    width: '18%',
+    minWidth: 50,
+    marginBottom: 8,
+  },
+  sliderContainer: {
+    marginBottom: 16,
+  },
+  sliderLabel: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 4,
   },
   segmented: {
     marginBottom: 16,
