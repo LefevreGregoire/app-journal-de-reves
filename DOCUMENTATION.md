@@ -1,11 +1,5 @@
 # Journal de Rêves - Documentation Technique
 
-## Informations du projet
-
-**Nom:** Journal de Rêves  
-**Type:** Application mobile React Native / Expo  
-**Auteur:** Grégoire Lefèvre  
-
 ---
 
 ## Installation et lancement
